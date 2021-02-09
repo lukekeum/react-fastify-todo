@@ -100,11 +100,6 @@
       "last 1 safari version"
     ]
   },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
   "jest": {
     "roots": [
       "<rootDir>/src"
@@ -154,5 +149,14 @@
       "jest-watch-typeahead/testname"
     ],
     "resetMocks": true
+  },
+  "babel": {
+    "presets": [
+      "react-app",
+      "@emotion/babel-preset-css-prop"
+    ],
+    "plugins": [
+      "@emotion"
+    ]
   }
 }

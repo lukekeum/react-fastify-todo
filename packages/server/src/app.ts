@@ -1,16 +1,34 @@
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyCompress from 'fastify-compress';
+import fastifyCookie from 'fastify-cookie';
+import fastifySession from 'fastify-session';
+import mongoose from 'mongoose';
+
 import { IncomingMessage, Server, ServerResponse } from 'http';
+
 import rootRoute from './routes/api';
 
 class App {
   public server: FastifyInstance<Server, IncomingMessage, ServerResponse>;
 
   constructor() {
+    const { SESSION_SECRET = '' } = process.env;
+
     this.server = fastify({ logger: true });
 
     this.server.register(rootRoute, { prefix: '/api' });
     this.server.register(fastifyCompress);
+
+    this.server.register(fastifyCookie);
+    this.server.register(fastifySession, {
+      cookieName: 'sessionId',
+      secret: SESSION_SECRET,
+      store: require('mongoose-session')(mongoose),
+      cookie: {
+        secure: false,
+        maxAge: 1000 * 60 * 30, // 30min
+      },
+    });
   }
 
   public async start() {

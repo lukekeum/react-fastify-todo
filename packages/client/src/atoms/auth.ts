@@ -8,6 +8,16 @@ interface ISigninState {
   };
 }
 
+export enum ESignState {
+  LOGIN = 'login',
+  REGISTER = 'register',
+}
+
+export const signTypeState = atom<ESignState>({
+  key: 'sign',
+  default: ESignState.LOGIN,
+});
+
 export const signInState = atom<ISigninState>({
   key: 'login',
   default: {

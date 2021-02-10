@@ -19,6 +19,9 @@ const ButtonStyle = css`
   background: #23211d;
   color: white;
   cursor: pointer;
+  &:hover {
+    background: #403b33;
+  }
 `;
 
 export default Button;

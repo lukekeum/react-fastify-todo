@@ -1,10 +1,16 @@
 import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { signTypeState as signTypeAtom, ESignState } from '../atoms/auth';
+
+import LoginContainer from '../lib/Sign/Login';
+import RegisterContainer from '../lib/Sign/Register';
 
 function Login() {
-  return (
-    <div>
-      <h1>Login page</h1>
-    </div>
+  const signType = useRecoilValue(signTypeAtom);
+  return signType === ESignState.LOGIN ? (
+    <LoginContainer />
+  ) : (
+    <RegisterContainer />
   );
 }
 

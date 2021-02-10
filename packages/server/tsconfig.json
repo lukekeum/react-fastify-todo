@@ -13,6 +13,9 @@
     "strictPropertyInitialization": false,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "baseUrl": "src"
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
+    }
   }
 }

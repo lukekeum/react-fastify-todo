@@ -2,7 +2,7 @@ import { FastifyPluginCallback } from 'fastify';
 import isEmail from 'validator/lib/isEmail';
 import bcrypt from 'bcrypt';
 
-import UserModel from './../../../model/user.model';
+import UserModel from '@src/model/user.model';
 
 interface ILoginInput {
   email: string;

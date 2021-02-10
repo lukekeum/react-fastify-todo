@@ -6,7 +6,11 @@ interface IButtonProps {
 }
 
 function Button({ text }: IButtonProps) {
-  return <button css={ButtonStyle}>{text}</button>;
+  return (
+    <button css={ButtonStyle} type='submit'>
+      {text}
+    </button>
+  );
 }
 
 const ButtonStyle = css`

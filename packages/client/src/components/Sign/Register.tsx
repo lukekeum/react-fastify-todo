@@ -6,11 +6,17 @@ import Container from './Container';
 import Title from './Title';
 import Input from './Input';
 import Button from './Button';
+import api from '../../lib/axios';
 
 interface IRegisterState {
   email: string;
   password: string;
   confirmPassword: string;
+}
+
+interface ISignupData {
+  message: string;
+  toastify?: string;
 }
 
 function Register() {
@@ -44,7 +50,7 @@ function Register() {
   };
 
   const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const { email, password, confirmPassword } = RegisterInput;
@@ -55,6 +61,18 @@ function Register() {
       if (password !== confirmPassword)
         return toast.error('비밀번호를 다시 확인해주세요', {
           autoClose: 3000,
+        });
+
+      api
+        .post('/api/auth/signup', {
+          email,
+          password,
+        })
+        .then(() => {
+          toast.success('성공적으로 회원가입을 하였습니다');
+        })
+        .catch((err) => {
+          toast.error(err.response.data.toastify);
         });
     },
     [RegisterInput]

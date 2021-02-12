@@ -7,6 +7,7 @@ import Title from './Title';
 
 import { toast } from 'react-toastify';
 import { css } from '@emotion/react';
+import api from '../../lib/axios';
 
 interface ILoginState {
   email: string;
@@ -37,7 +38,7 @@ function Login() {
   };
 
   const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const { email, password } = LoginInput;
@@ -45,6 +46,18 @@ function Login() {
         return toast.error('이메일을 입력해주세요', { autoClose: 3000 });
       if (!password)
         return toast.error('비밀번호를 입력해주세요', { autoClose: 3000 });
+
+      api
+        .post('/api/auth/signin', {
+          email,
+          password,
+        })
+        .then(() => {
+          toast.success('성공적으로 로그인을 하였습니다');
+        })
+        .catch((err) => {
+          toast.error(err.response.data.toastify);
+        });
     },
     [LoginInput]
   );

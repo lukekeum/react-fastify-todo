@@ -18,14 +18,24 @@ const signUpRoute: FastifyPluginCallback = (fastify, opts, done) => {
     }
 
     if (!isEmail(body.email)) {
-      return res.status(400).send({ message: 'Invalid email' });
+      return res
+        .status(400)
+        .send({
+          message: 'Invalid email',
+          toastify: '올바르지 않은 이메일 형식입니다',
+        });
     }
 
     try {
       const emailUser = await UserModel.findOne({ email: body.email });
 
       if (emailUser) {
-        return res.status(401).send({ message: 'Email user already exists' });
+        return res
+          .status(401)
+          .send({
+            message: 'Email user already exists',
+            toastify: '해당 유저는 이미 존재합니다',
+          });
       }
 
       const salt = await bcrypt.genSalt(10);

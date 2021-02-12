@@ -2,6 +2,7 @@ import fastify, { FastifyInstance } from 'fastify';
 import fastifyCompress from 'fastify-compress';
 import fastifyCookie from 'fastify-cookie';
 import fastifySession from 'fastify-session';
+import fastifyCors from 'fastify-cors';
 import mongoose from 'mongoose';
 
 import { IncomingMessage, Server, ServerResponse } from 'http';
@@ -18,6 +19,7 @@ class App {
 
     this.server.register(rootRoute, { prefix: '/api' });
     this.server.register(fastifyCompress);
+    this.server.register(fastifyCors);
 
     this.server.register(fastifyCookie);
     this.server.register(fastifySession, {

@@ -22,7 +22,7 @@ export const signInState = atom<ISigninState>({
   key: 'login',
   default: {
     isLoading: false,
-    isSignedIn: false,
+    isSignedIn: true,
     attributes: {
       email: null,
     },

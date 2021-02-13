@@ -1,10 +1,9 @@
 import React from 'react';
+import MainProvider from '../components/Main';
 
 function Main() {
   return (
-    <div>
-      <h1>Main</h1>
-    </div>
+    <MainProvider />
   );
 }
 

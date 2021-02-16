@@ -1,20 +1,28 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { signInState as signInAtom } from './atoms/auth';
 import axios from 'axios';
 
 import Main from './pages/Main';
 import Login from './pages/Login';
+import useFetchUser from './hooks/auth/useFetchUser';
 
 axios.defaults.withCredentials = true;
 
 function App() {
-  const { isSignedIn } = useRecoilValue(signInAtom);
+  const user = useFetchUser();
+  const [userState, setUserState] = useRecoilState(signInAtom);
+
+  if (user) {
+    setUserState({ ...userState, isSignedIn: true });
+  }
+
+  const { isSignedIn } = userState;
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path='/' component={isSignedIn ? Main : Login} />
+        <Route exact path="/" component={isSignedIn ? Main : Login} />
       </Switch>
     </BrowserRouter>
   );

@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import rootRoute from './routes/api';
+import fastifyJWT from 'fastify-jwt';
 
 class App {
   public server: FastifyInstance<Server, IncomingMessage, ServerResponse>;
@@ -22,6 +23,7 @@ class App {
     this.server.register(fastifyCors, { origin: true, credentials: true });
 
     this.server.register(fastifyCookie);
+    this.server.register(fastifyJWT);
     this.server.register(fastifySession, {
       cookieName: 'sessionId',
       secret: SESSION_SECRET,

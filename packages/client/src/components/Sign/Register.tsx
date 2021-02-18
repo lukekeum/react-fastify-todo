@@ -76,7 +76,7 @@ function Register() {
         });
       } catch (err) {
         const errResponse = err.response;
-        toast.error(errResponse.data.toasitfy);
+        toast.error(errResponse.data.toastify);
       }
     },
     [RegisterInput, setSigninState],

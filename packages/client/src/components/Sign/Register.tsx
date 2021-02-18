@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import { css } from '@emotion/react';
+import { useSetRecoilState } from 'recoil';
+import { signInState } from '../../atoms/auth';
 
 import Container from './Container';
 import Title from './Title';
@@ -14,12 +16,8 @@ interface IRegisterState {
   confirmPassword: string;
 }
 
-interface ISignupData {
-  message: string;
-  toastify?: string;
-}
-
 function Register() {
+  const setSigninState = useSetRecoilState(signInState);
   const [RegisterInput, setRegisterInput] = useState<IRegisterState>({
     email: '',
     password: '',
@@ -63,19 +61,25 @@ function Register() {
           autoClose: 3000,
         });
 
-      api
-        .post('/api/auth/signup', {
+      try {
+        await api.post('/api/auth/signup', {
           email,
           password,
-        })
-        .then(() => {
-          toast.success('성공적으로 회원가입을 하였습니다');
-        })
-        .catch((err) => {
-          toast.error(err.response.data.toastify);
         });
+
+        toast.success('성공적으로 회원가입 하였습니다');
+
+        setSigninState({
+          isLoading: false,
+          isSignedIn: true,
+          attributes: { email },
+        });
+      } catch (err) {
+        const errResponse = err.response;
+        toast.error(errResponse.data.toasitfy);
+      }
     },
-    [RegisterInput]
+    [RegisterInput, setSigninState],
   );
 
   return (
@@ -83,27 +87,27 @@ function Register() {
       <Title />
       <form css={formStyle} onSubmit={onSubmit}>
         <Input
-          name='email'
-          type='text'
-          placeholder='E-mail'
+          name="email"
+          type="text"
+          placeholder="E-mail"
           value={RegisterInput.email}
           onChange={onChangeInput}
         />
         <Input
-          name='password'
-          type='password'
-          placeholder='Password'
+          name="password"
+          type="password"
+          placeholder="Password"
           value={RegisterInput.password}
           onChange={onChangeInput}
         />
         <Input
-          name='confirmPassword'
-          type='password'
-          placeholder='Confirm password'
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm password"
           value={RegisterInput.confirmPassword}
           onChange={onChangeInput}
         />
-        <Button text='회원가입' />
+        <Button text="회원가입" />
       </form>
     </Container>
   );

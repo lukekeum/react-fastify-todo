@@ -6,17 +6,11 @@ import axios from 'axios';
 
 import Main from './pages/Main';
 import Login from './pages/Login';
-import useFetchUser from './hooks/auth/useFetchUser';
 
 axios.defaults.withCredentials = true;
 
 function App() {
-  const user = useFetchUser();
-  const [userState, setUserState] = useRecoilState(signInAtom);
-
-  if (user) {
-    setUserState({ ...userState, isSignedIn: true });
-  }
+  const [userState] = useRecoilState(signInAtom);
 
   const { isSignedIn } = userState;
   return (

@@ -1,9 +1,7 @@
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyCompress from 'fastify-compress';
 import fastifyCookie from 'fastify-cookie';
-import fastifySession from 'fastify-session';
 import fastifyCors from 'fastify-cors';
-import mongoose from 'mongoose';
 
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
@@ -14,7 +12,7 @@ class App {
   public server: FastifyInstance<Server, IncomingMessage, ServerResponse>;
 
   constructor() {
-    const { SESSION_SECRET = '' } = process.env;
+    const { JWT_SECRET = '' } = process.env;
 
     this.server = fastify({ logger: true });
 
@@ -23,16 +21,7 @@ class App {
     this.server.register(fastifyCors, { origin: true, credentials: true });
 
     this.server.register(fastifyCookie);
-    this.server.register(fastifyJWT);
-    this.server.register(fastifySession, {
-      cookieName: 'sessionId',
-      secret: SESSION_SECRET,
-      store: require('mongoose-session')(mongoose),
-      cookie: {
-        secure: false,
-        maxAge: 1000 * 60 * 30, // 30min
-      },
-    });
+    this.server.register(fastifyJWT, { secret: JWT_SECRET });
   }
 
   public async start() {

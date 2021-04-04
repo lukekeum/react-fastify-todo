@@ -13,8 +13,6 @@ const signInRoute: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.post('/signin', async (req, res) => {
     const body = <ILoginInput>req.body;
 
-    console.log(body);
-
     if (!body.email || !body.password) {
       return res.status(400).send({
         message: 'Unknown Input',
@@ -51,13 +49,18 @@ const signInRoute: FastifyPluginCallback = (fastify, opts, done) => {
         });
       }
 
-      // Store user info to session
-      req.session.uid = emailUser._id;
-      req.session.isLoggedIn = true;
+      const token = await emailUser.generateToken();
 
-      return res
-        .status(201)
-        .send({ message: 'Logged In', data: { email: body.email } });
+      res.cookie('token', token.refreshToken, {
+        httpOnly: true,
+        path: '/',
+      });
+
+      return res.status(201).send({
+        message: 'Logged In',
+        data: { email: body.email },
+        token: token.accessToken,
+      });
     } catch (err) {
       res.status(500).send({ message: 'Internal Server Error' });
       fastify.log.error(err);

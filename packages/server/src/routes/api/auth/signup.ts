@@ -18,24 +18,20 @@ const signUpRoute: FastifyPluginCallback = (fastify, opts, done) => {
     }
 
     if (!isEmail(body.email)) {
-      return res
-        .status(400)
-        .send({
-          message: 'Invalid email',
-          toastify: '올바르지 않은 이메일 형식입니다',
-        });
+      return res.status(400).send({
+        message: 'Invalid email',
+        toastify: '올바르지 않은 이메일 형식입니다',
+      });
     }
 
     try {
       const emailUser = await UserModel.findOne({ email: body.email });
 
       if (emailUser) {
-        return res
-          .status(401)
-          .send({
-            message: 'Email user already exists',
-            toastify: '해당 유저는 이미 존재합니다',
-          });
+        return res.status(401).send({
+          message: 'Email user already exists',
+          toastify: '해당 유저는 이미 존재합니다',
+        });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -47,14 +43,19 @@ const signUpRoute: FastifyPluginCallback = (fastify, opts, done) => {
 
       await user.save();
 
-      req.session.uid = user._id;
-      req.session.isLoggedIn = true;
+      const token = await user.generateToken();
+
+      res.cookie('token', token.refreshToken, {
+        httpOnly: true,
+        path: '/',
+      });
 
       return res.status(201).send({
         message: 'Registered',
         data: {
           email: body.email,
         },
+        token: token.accessToken,
       });
     } catch (err) {
       res.status(500).send({ message: 'Internal Error' });
